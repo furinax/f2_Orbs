@@ -1,0 +1,20 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ColorTrackingSound", "ColorTrackingSound.vcxproj", "{D949936C-8CCA-4C86-BB89-BD9632BB018C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D949936C-8CCA-4C86-BB89-BD9632BB018C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D949936C-8CCA-4C86-BB89-BD9632BB018C}.Debug|Win32.Build.0 = Debug|Win32
+		{D949936C-8CCA-4C86-BB89-BD9632BB018C}.Release|Win32.ActiveCfg = Release|Win32
+		{D949936C-8CCA-4C86-BB89-BD9632BB018C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
