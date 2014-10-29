@@ -3,15 +3,16 @@
 using namespace ci;
 using namespace std;
 
-Particle::Particle( const Vec2f& position, float radius, float mass, float drag ){
+Particle::Particle( const Vec2f& position, float radius ){
     this->position = position;
+	this->anchorPosition = position;
     this->mRadiusAnchor = radius;
 	this->mRadius = radius;
-    this->mass = mass;
-    this->drag = drag;
+	//this->VEL_THRESHOLD = radius * 2;
     prevPosition = position;
-    forces = Vec2f::zero();
-	mColor = ColorA(1,.5,0, 1.f);
+	mColor = Color::white();
+	mOverlayColor = Color::white();
+	mDrag = 1.0f;
 }
 
 void Particle::update(){
@@ -22,22 +23,34 @@ void Particle::update(){
 
 	float ageMap = 1.0f - (mAge / (float)mLifespan);
 	mRadius = mRadiusAnchor * ageMap;
-	mColor = ColorA(1.f, ageMap / 2.f, (1.0f - ageMap), ageMap);
+	//mColor = ColorA(1.f, ageMap / 2.f, (1.0f - ageMap), ageMap);
 
     Vec2f temp = position;
-    Vec2f vel = ( position - prevPosition ) * drag;
-    position += vel + forces / mass;
+	mVel += mAcc;
+	mVel *= mDrag;
+	position += mVel;
     prevPosition = temp;
-    forces = Vec2f::zero();
 }
 
-void Particle::draw(bool whiteout){
-	if (!whiteout)
+void Particle::draw(bool overlay){
+	if (!overlay)
 		gl::color(mColor);
 	else
 	{
 		ColorA w(Color::white(), mColor.a);
 		gl::color(w);
 	}
-    gl::drawSolidCircle( position, mRadius );
+
+	if (false)//(mVel.length() > VEL_THRESHOLD)
+	{
+		gl::lineWidth(mRadius);
+		gl::begin(GL_LINES);
+		gl::vertex(prevPosition);
+		gl::vertex(position);
+		gl::end();
+	}
+	else
+	{
+		gl::drawSolidCircle(position, mRadius);
+	}
 }

@@ -18,6 +18,11 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
+namespace {
+	ColorA Orange(1, .5, 0, 1.f);
+
+}
+
 class ColorTrackingSoundApp : public AppNative {
 public:
 	void setup();
@@ -34,7 +39,7 @@ public:
 	Listener list;
 	Vec2f mMousePosition, mPrevPosition;
 
-	float MAX_PARTICLE_RADIUS = 25.f, MIN_PARTICLE_RADIUS = 2.f;
+	float MAX_PARTICLE_RADIUS = 10.f, MIN_PARTICLE_RADIUS = 2.f;
 };
 
 void ColorTrackingSoundApp::setup()
@@ -70,21 +75,20 @@ void ColorTrackingSoundApp::mouseMove(MouseEvent event)
 {
 	mPrevPosition = mMousePosition;
 	mMousePosition = event.getPos();
-	for (std::vector<Particle*>::iterator it = ps.mParticles.begin(); it != ps.mParticles.end(); ++it) {
-		Vec2f repulsionForce = (*it)->position - event.getPos();
-		repulsionForce = repulsionForce.normalized() * math<float>::max(0.f, 100.f - repulsionForce.length());
-		(*it)->forces += repulsionForce;
-	}
 }
 
 void ColorTrackingSoundApp::update()
 {
 	t.update();
 	list.update();
-
+	float x = ci::constrain( 2.f* list.getVolume(), 0.f, 1.f );
+	ColorA foo = ColorA(randFloat(), x/2.f, 1.f-x, 1.f);
 	for (int i = 0; i < t.mCenters.size(); i++)
 	{
-		Particle* particle = new Particle(fromOcv(t.mCenters[i] * t.mScaling), ci::constrain(MAX_PARTICLE_RADIUS * list.getVolume() * 5.f, MIN_PARTICLE_RADIUS, MAX_PARTICLE_RADIUS), Rand::randFloat(1.f, 10.f), 0.5);
+		Particle* particle = new Particle(fromOcv(t.mCenters[i] * t.mScaling), ci::constrain(MAX_PARTICLE_RADIUS * list.getVolume() * 5.f, MIN_PARTICLE_RADIUS, MAX_PARTICLE_RADIUS));
+		particle->mVel = 20.f*(Vec2f(sin(getElapsedFrames()/4.f), cos(getElapsedFrames()/4.f)));
+		particle->mColor = foo;
+		//particle->mDrag = .7f;
 		ps.addParticle(particle);
 	}
 	ps.update();
@@ -96,7 +100,7 @@ void ColorTrackingSoundApp::draw()
 	gl::color(Color::white());
 	t.draw();
 	// Draw the interface
-	//ps.draw();
+	ps.draw();
 }
 
 

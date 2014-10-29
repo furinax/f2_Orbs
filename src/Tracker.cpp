@@ -88,7 +88,7 @@ void Tracker::draw()
 			gl::begin(GL_POINTS);
 			gl::vertex(center);
 			gl::end();
-
+			gl::lineWidth(1.f);
 			gl::drawStrokedCircle(center, mRadius[i] * mScaling);
 		}
 	}

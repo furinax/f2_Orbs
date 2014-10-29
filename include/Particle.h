@@ -6,17 +6,17 @@
 class Particle{
 public:
     
-    Particle( const ci::Vec2f& position, float radius, float mass, float drag );
+    Particle( const ci::Vec2f& position, float radius );
     
     void update();
-    void draw( bool whiteout );
+	void draw(bool overlay);
     
-    ci::Vec2f position, prevPosition;
-    ci::Vec2f forces;
-    float mRadiusAnchor, mRadius;
-    float mass;
-    float drag;
-	int mAge = 0, mLifespan = 100;
+    ci::Vec2f position, prevPosition, anchorPosition;
+	ci::Vec2f mVel, mAcc;
+    float mRadiusAnchor, mRadius, mDrag;
+	int mAge = 0, mLifespan = 20;
 	bool mIsDead = false;
-	ci::ColorA mColor;
+	ci::ColorA mColor, mOverlayColor;
+
+	//float VEL_THRESHOLD = 25.f; //threshold of vel to determine when to draw a line
 };

@@ -94,8 +94,8 @@ void ParticleSystem::draw(){
 
 	gl::enableAdditiveBlending();
 	gl::draw(mFboBlurred.getTexture(), getWindowBounds());
-	//gl::draw(mFboBlurred.getTexture(), getWindowBounds());
-	//gl::draw(mFboBlurred.getTexture(), getWindowBounds());
+	gl::draw(mFboBlurred.getTexture(), getWindowBounds());
+	gl::draw(mFboBlurred.getTexture(), getWindowBounds());
 	
 	for (std::vector<Particle*>::iterator it = mParticles.begin(); it != mParticles.end(); ++it){
 		(*it)->draw( true );
