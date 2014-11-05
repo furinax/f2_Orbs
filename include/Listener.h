@@ -13,7 +13,7 @@ public:
 	~Listener();
 	void setup();
 	void update();
-	float getVolume();
+	float getVolume() const;
 
 	ci::audio::InputDeviceNodeRef		mInputDeviceNode;
 	ci::audio::MonitorSpectralNodeRef	mMonitorSpectralNode;

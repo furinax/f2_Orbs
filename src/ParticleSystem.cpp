@@ -30,19 +30,19 @@ void ParticleSystem::setup()
 		loadFile("../assets/blur_frag.glsl"));
 }
 
-void ParticleSystem::update(){
+void ParticleSystem::update(const Listener& list, const ci::Vec2f pos){
 	for (std::vector<Particle*>::iterator it = mParticles.begin(); it != mParticles.end();){
 		if ((*it)->mIsDead) {
 			it = mParticles.erase(it);
 		}
 		else {
-			(*it)->update();
+			(*it)->update(list, pos);
 			++it;
 		}
     }
 }
 
-void ParticleSystem::draw(){
+void ParticleSystem::draw(const Listener& list, const ci::Vec2f pos){
 	//gl::clear(Color(0, 0, 0));
 	mFboBlurred.bindFramebuffer();
 	gl::enableAlphaBlending();
@@ -55,7 +55,7 @@ void ParticleSystem::draw(){
 	gl::disableAlphaBlending();
 
     for( std::vector<Particle*>::iterator it = mParticles.begin(); it != mParticles.end(); ++it ){
-        (*it)->draw(false);
+        (*it)->draw(false, list, pos);
     }
 	
 	mFboBlurred.unbindFramebuffer();
@@ -98,7 +98,7 @@ void ParticleSystem::draw(){
 	gl::draw(mFboBlurred.getTexture(), getWindowBounds());
 	
 	for (std::vector<Particle*>::iterator it = mParticles.begin(); it != mParticles.end(); ++it){
-		(*it)->draw( true );
+		(*it)->draw( true , list, pos);
 	}
 
 	gl::disableAlphaBlending();

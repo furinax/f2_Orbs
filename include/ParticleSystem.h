@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Particle.h"
+#include "ParticleA.h"
+#include "ParticleB.h"
+#include "ParticleC.h"
 #include "cinder/Vector.h"
 #include "cinder/gl/gl.h"
 #include "cinder/gl/Fbo.h"
@@ -13,8 +16,8 @@ public:
     ~ParticleSystem();
     
 	void setup();
-    void update();
-    void draw();
+	void update(const Listener& list, const ci::Vec2f pos);
+	void draw(const Listener& list, const ci::Vec2f pos);
     
     void addParticle( Particle *particle );
     void destroyParticle( Particle *particle );

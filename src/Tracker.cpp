@@ -11,31 +11,45 @@ Tracker::~Tracker()
 	mImage.reset();
 }
 
+int Tracker::numBlobs()
+{
+	return mBlobs.size();
+}
+
+Vec2f Tracker::getBlobCenter(const int num)
+{
+	if (mBlobs.size() <= num )
+		return getWindowCenter();
+	return fromOcv(mBlobs[num].center * mScaleUp);
+}
+
 void Tracker::setup()
 {
 	try {
-		mCapture = Capture(getWindowWidth(), getWindowHeight());
+		mCapture = Capture(
+			getWindowWidth() < WEBCAM_MAX_WIDTH ? getWindowWidth() : WEBCAM_MAX_WIDTH,
+			getWindowHeight() < WEBCAM_MAX_HEIGHT ? getWindowHeight() : WEBCAM_MAX_HEIGHT );
 		mCapture.start();
 	}
 	catch (...) {
 		console() << "Failed to initialize capture" << std::endl;
 	}
 
-	mScaling = 2.5f;
+	mScaleDown = 2.5f;
+	mScaleUp = mScaleDown;// *(static_cast<float>(getWindowWidth()) / static_cast<float>(mCapture.getWidth()));
 
 	//this is the 2nd algorithm
 	cv::SimpleBlobDetector::Params params;
-	params.minThreshold = 5;
+	params.minThreshold = 50;
 	params.maxThreshold = 255;
 	params.thresholdStep = 5;
 
-	params.minArea = 2;
-	params.minConvexity = 0.3;
-	params.minInertiaRatio = 0.01;
+	params.minArea = 2; params.maxArea = 500;
+	params.minConvexity = 0.3; params.maxConvexity = 1;
+	params.minInertiaRatio = .01f;
 
-	params.maxArea = 500;
-	params.maxConvexity = 10;
-
+	params.filterByConvexity = true;
+	params.filterByArea = true;
 	params.filterByColor = false;
 	params.filterByCircularity = false;
 	
@@ -56,22 +70,32 @@ void Tracker::update()
 
 		cv::Mat inputMat(toOcv(mImage));
 
-		cv::resize(inputMat, inputMat, cv::Size(getWindowWidth() / mScaling, getWindowHeight() / mScaling));
+		cv::resize(inputMat, inputMat, cv::Size( ((float)getWindowWidth()) / mScaleDown, ((float)getWindowHeight()) / mScaleDown));
 
 		vector< cv::KeyPoint >  keyPoints;
 		mBlobDetector->detect(inputMat, keyPoints);
 
-		mCenters = vector<cv::Point2f>(keyPoints.size());
-		mRadius = vector<float>(keyPoints.size());
+
+
+		mBlobs.clear();
+		mBlobs.reserve(keyPoints.size());
 		for (int i = 0; i < keyPoints.size(); i++)
 		{
-			mCenters.push_back(keyPoints[i].pt);
-			mRadius.push_back(keyPoints[i].size);
+			myBlob m;
+			m.center = keyPoints[i].pt;
+			m.radius = keyPoints[i].size;
+			mBlobs.push_back(m);
+		}
+
+		if (mBlobs.size() > maxBlobs)
+		{
+			std::partial_sort(mBlobs.begin(), mBlobs.begin() + maxBlobs, mBlobs.end());
+			mBlobs.resize(maxBlobs);
 		}
 	}
 	else
 	{
-		console() << "WARNING: skipped a frame";
+		console() << "WARNING: skipped a frame: " << getElapsedFrames() << endl;
 	}
 }
 
@@ -82,14 +106,14 @@ void Tracker::draw()
 
 		gl::color(Color::white());
 
-		for (int i = 0; i < mCenters.size(); i++)
+		for (int i = 0; i < mBlobs.size(); i++)
 		{
-			Vec2f center = fromOcv(mCenters[i])*mScaling;
+			Vec2f center = fromOcv(mBlobs[i].center)*mScaleUp;
 			gl::begin(GL_POINTS);
 			gl::vertex(center);
 			gl::end();
 			gl::lineWidth(1.f);
-			gl::drawStrokedCircle(center, mRadius[i] * mScaling);
+			gl::drawStrokedCircle(center, mBlobs[i].radius);
 		}
 	}
 }

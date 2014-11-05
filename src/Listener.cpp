@@ -46,7 +46,7 @@ void Listener::update()
 	float mag = audio::linearToDecibel(mMagSpectrum[bin]);
 }
 
-float Listener::getVolume()
+float Listener::getVolume() const
 {
 	return mMonitorSpectralNode->getVolume();
 }

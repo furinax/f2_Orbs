@@ -16,6 +16,15 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
+struct myBlob {
+	cv::Point2f center;
+	float radius;
+	bool operator<(myBlob other) const
+	{
+		return radius > other.radius;
+	}
+};
+
 class Tracker
 {
 public:
@@ -25,13 +34,17 @@ public:
 	void update();
 	void draw();
 	void mouseDown(Vec2i &mousePos);
+	int numBlobs();
+	Vec2f getBlobCenter(const int num);
 
 	Surface8u   mImage;
 	Capture     mCapture;
 	gl::Texture mCaptureTex;
-	vector<cv::Point2f> mCenters;
-	vector<float> mRadius;
+	vector<myBlob> mBlobs;
 	int mMaxCenters;
-	float mScaling; //the scale difference between the mCenters and actual screen
+	float mScaleDown, mScaleUp;
 	cv::SimpleBlobDetector *mBlobDetector;
+
+	const int WEBCAM_MAX_WIDTH = 1280, WEBCAM_MAX_HEIGHT = 720;
+	int maxBlobs = 2;
 };
