@@ -55,6 +55,13 @@ void Tracker::setup()
 	
 	mBlobDetector = new cv::SimpleBlobDetector(params);
 	mBlobDetector->create("SimpleBlob");
+
+	Interpolator i0;
+	Interpolator i1;
+
+	mInterpolators.insert(std::pair<int, Interpolator>(0, i0));
+	mInterpolators.insert(std::pair<int, Interpolator>(1, i1));
+
 }
 
 void Tracker::mouseDown(Vec2i& mousePos)
@@ -92,6 +99,38 @@ void Tracker::update()
 			std::partial_sort(mBlobs.begin(), mBlobs.begin() + maxBlobs, mBlobs.end());
 			mBlobs.resize(maxBlobs);
 		}
+
+		if (mBlobs.size() == 2)
+		{
+			if (mInterpolators[0].getDist(fromOcv(mBlobs[0].center)*mScaleUp) < mInterpolators[1].getDist(fromOcv(mBlobs[0].center)*mScaleUp))
+			{
+				mInterpolators[0].addPoint(fromOcv(mBlobs[0].center)*mScaleUp);
+				mInterpolators[1].addPoint(fromOcv(mBlobs[1].center)*mScaleUp);
+			}
+			else
+			{
+				mInterpolators[0].addPoint(fromOcv(mBlobs[1].center)*mScaleUp);
+				mInterpolators[1].addPoint(fromOcv(mBlobs[0].center)*mScaleUp);
+			}
+		}
+		else if (mBlobs.size() == 1)
+		{
+			if (mInterpolators[0].getDist(fromOcv(mBlobs[0].center)*mScaleUp) < mInterpolators[1].getDist(fromOcv(mBlobs[0].center)*mScaleUp))
+			{
+				mInterpolators[0].addPoint(fromOcv(mBlobs[0].center)*mScaleUp);
+				mInterpolators[1].getNextPoint();
+			}
+			else
+			{
+				mInterpolators[0].getNextPoint();
+				mInterpolators[1].addPoint(fromOcv(mBlobs[0].center)*mScaleUp);
+			}
+		}
+		else
+		{
+			mInterpolators[0].getNextPoint();
+			mInterpolators[1].getNextPoint();
+		}
 	}
 	else
 	{
@@ -115,5 +154,7 @@ void Tracker::draw()
 			gl::lineWidth(1.f);
 			gl::drawStrokedCircle(center, mBlobs[i].radius);
 		}
+		for (std::map<int, Interpolator>::iterator itor = mInterpolators.begin(); itor != mInterpolators.end(); itor++ )
+			itor->second.draw();
 	}
 }

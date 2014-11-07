@@ -10,7 +10,8 @@
 #include "cinder/cairo/Cairo.h"
 #include "cinder/Capture.h"
 #include "CinderOpenCV.h"
-
+#include "Interpolator.h"
+#include <map>
 
 using namespace ci;
 using namespace ci::app;
@@ -44,6 +45,7 @@ public:
 	int mMaxCenters;
 	float mScaleDown, mScaleUp;
 	cv::SimpleBlobDetector *mBlobDetector;
+	std::map<int, Interpolator> mInterpolators;
 
 	const int WEBCAM_MAX_WIDTH = 1280, WEBCAM_MAX_HEIGHT = 720;
 	int maxBlobs = 2;

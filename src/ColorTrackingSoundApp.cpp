@@ -94,9 +94,9 @@ void ColorTrackingSoundApp::draw()
 {
 	gl::clear(Color(0.f, 0.f, 0.f));
 	gl::color(Color::white());
-	//t.draw();
+	t.draw();
 	// Draw the interface
-	ps.draw(list, t.getBlobCenter(0));
+	//ps.draw(list, t.getBlobCenter(0));
 }
 
 
