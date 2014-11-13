@@ -132,9 +132,9 @@
   <ItemGroup>
     <None Include="..\assets\blur_frag.glsl" />
     <None Include="..\assets\blur_vert.glsl" />
-    <ClInclude Include="..\src\Interpolator.cpp">
+    <ClCompile Include="..\src\Interpolator.cpp">
       <FileType>CppCode</FileType>
-    </ClInclude>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

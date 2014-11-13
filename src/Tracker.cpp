@@ -40,24 +40,25 @@ void Tracker::setup()
 
 	//this is the 2nd algorithm
 	cv::SimpleBlobDetector::Params params;
-	params.minThreshold = 50;
+	params.minThreshold = 5;
 	params.maxThreshold = 255;
 	params.thresholdStep = 5;
 
-	params.minArea = 2; params.maxArea = 500;
-	params.minConvexity = 0.3; params.maxConvexity = 1;
-	params.minInertiaRatio = .01f;
+	params.minArea = 3; params.maxArea = 500;
+	params.minConvexity = 0.1f; params.maxConvexity = 5.f;
+	//params.minInertiaRatio = .001f; params.maxInertiaRatio = 1.f;
 
-	params.filterByConvexity = true;
+	params.filterByConvexity = false;
 	params.filterByArea = true;
 	params.filterByColor = false;
 	params.filterByCircularity = false;
+	params.filterByInertia = false;
 	
 	mBlobDetector = new cv::SimpleBlobDetector(params);
 	mBlobDetector->create("SimpleBlob");
 
-	Interpolator i0;
-	Interpolator i1;
+	Interpolator i0; i0.d_color = Color(1.f, 0.f, 0.f);
+	Interpolator i1; i1.d_color = Color(0.5f, 1.f, .5f);
 
 	mInterpolators.insert(std::pair<int, Interpolator>(0, i0));
 	mInterpolators.insert(std::pair<int, Interpolator>(1, i1));
@@ -77,7 +78,9 @@ void Tracker::update()
 
 		cv::Mat inputMat(toOcv(mImage));
 
-		cv::resize(inputMat, inputMat, cv::Size( ((float)getWindowWidth()) / mScaleDown, ((float)getWindowHeight()) / mScaleDown));
+		cv::cvtColor(inputMat, inputMat, CV_BGR2GRAY);
+		cv::resize(inputMat, inputMat, cv::Size(((float)getWindowWidth()) / mScaleDown, ((float)getWindowHeight()) / mScaleDown));
+		
 
 		vector< cv::KeyPoint >  keyPoints;
 		mBlobDetector->detect(inputMat, keyPoints);
@@ -105,25 +108,32 @@ void Tracker::update()
 			if (mInterpolators[0].getDist(fromOcv(mBlobs[0].center)*mScaleUp) < mInterpolators[1].getDist(fromOcv(mBlobs[0].center)*mScaleUp))
 			{
 				mInterpolators[0].addPoint(fromOcv(mBlobs[0].center)*mScaleUp);
+				mInterpolators[0].d_interpolationCount = 0;
 				mInterpolators[1].addPoint(fromOcv(mBlobs[1].center)*mScaleUp);
+				mInterpolators[1].d_interpolationCount = 0;
 			}
 			else
 			{
 				mInterpolators[0].addPoint(fromOcv(mBlobs[1].center)*mScaleUp);
+				mInterpolators[0].d_interpolationCount = 0;
 				mInterpolators[1].addPoint(fromOcv(mBlobs[0].center)*mScaleUp);
+				mInterpolators[1].d_interpolationCount = 0;
 			}
 		}
 		else if (mBlobs.size() == 1)
 		{
-			if (mInterpolators[0].getDist(fromOcv(mBlobs[0].center)*mScaleUp) < mInterpolators[1].getDist(fromOcv(mBlobs[0].center)*mScaleUp))
+			if (mInterpolators[0].d_interpolationCount == 0
+				|| mInterpolators[0].getDist(fromOcv(mBlobs[0].center)*mScaleUp) < mInterpolators[1].getDist(fromOcv(mBlobs[0].center)*mScaleUp))
 			{
 				mInterpolators[0].addPoint(fromOcv(mBlobs[0].center)*mScaleUp);
+				mInterpolators[0].d_interpolationCount = 0;
 				mInterpolators[1].getNextPoint();
 			}
 			else
 			{
 				mInterpolators[0].getNextPoint();
 				mInterpolators[1].addPoint(fromOcv(mBlobs[0].center)*mScaleUp);
+				mInterpolators[1].d_interpolationCount = 0;
 			}
 		}
 		else
@@ -148,12 +158,14 @@ void Tracker::draw()
 		for (int i = 0; i < mBlobs.size(); i++)
 		{
 			Vec2f center = fromOcv(mBlobs[i].center)*mScaleUp;
-			gl::begin(GL_POINTS);
-			gl::vertex(center);
-			gl::end();
-			gl::lineWidth(1.f);
+			glBegin(GL_POINTS);
+			glVertex2f(center);
+			glEnd();
+			glLineWidth(1.f);
 			gl::drawStrokedCircle(center, mBlobs[i].radius);
 		}
+
+		mInterpolators.begin()->second.draw();
 		for (std::map<int, Interpolator>::iterator itor = mInterpolators.begin(); itor != mInterpolators.end(); itor++ )
 			itor->second.draw();
 	}
