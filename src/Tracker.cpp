@@ -2,7 +2,8 @@
 
 Tracker::Tracker()
 {
-	
+	mOffset = Vec2f::zero();
+	mScaleUpAdjust = Vec2f(1.f, 1.f);
 }
 
 Tracker::~Tracker()
@@ -18,9 +19,13 @@ int Tracker::numBlobs()
 
 Vec2f Tracker::getBlobCenter(const int num)
 {
+	/* old way
 	if (mBlobs.size() <= num )
 		return getWindowCenter();
-	return fromOcv(mBlobs[num].center * mScaleUp);
+	return adjustScale(fromOcv(mBlobs[num].center)* mScaleUp) + mOffset;*/
+	if (mInterpolators.find(num) == mInterpolators.end())
+		return Vec2f::zero();
+	return mInterpolators.at(num).getFrontPoint();
 }
 
 void Tracker::setup()
@@ -36,7 +41,7 @@ void Tracker::setup()
 	}
 
 	mScaleDown = 2.5f;
-	mScaleUp = mScaleDown;// *(static_cast<float>(getWindowWidth()) / static_cast<float>(mCapture.getWidth()));
+	mScaleUp = Vec2f(mScaleDown, mScaleDown);
 
 	//this is the 2nd algorithm
 	cv::SimpleBlobDetector::Params params;
@@ -65,9 +70,14 @@ void Tracker::setup()
 
 }
 
-void Tracker::mouseDown(Vec2i& mousePos)
+Vec2f Tracker::adjustScale(Vec2f initialPoint)
 {
+	return getWindowCenter() + (initialPoint - getWindowCenter()) * mScaleUpAdjust;
+}
 
+void Tracker::mouseDown(Vec2f& mousePos)
+{
+	mOffset = mousePos - getWindowCenter();
 }
 
 void Tracker::update()
@@ -77,15 +87,12 @@ void Tracker::update()
 		mCaptureTex = gl::Texture(mImage);
 
 		cv::Mat inputMat(toOcv(mImage));
-
+		
 		cv::cvtColor(inputMat, inputMat, CV_BGR2GRAY);
 		cv::resize(inputMat, inputMat, cv::Size(((float)getWindowWidth()) / mScaleDown, ((float)getWindowHeight()) / mScaleDown));
 		
-
 		vector< cv::KeyPoint >  keyPoints;
 		mBlobDetector->detect(inputMat, keyPoints);
-
-
 
 		mBlobs.clear();
 		mBlobs.reserve(keyPoints.size());
@@ -105,34 +112,34 @@ void Tracker::update()
 
 		if (mBlobs.size() == 2)
 		{
-			if (mInterpolators[0].getDist(fromOcv(mBlobs[0].center)*mScaleUp) < mInterpolators[1].getDist(fromOcv(mBlobs[0].center)*mScaleUp))
+			if (mInterpolators[0].getDist(adjustScale(fromOcv(mBlobs[0].center)*mScaleUp)) < mInterpolators[1].getDist(adjustScale(fromOcv(mBlobs[0].center)*mScaleUp)))
 			{
-				mInterpolators[0].addPoint(fromOcv(mBlobs[0].center)*mScaleUp);
+				mInterpolators[0].addPoint(adjustScale(fromOcv(mBlobs[0].center)*mScaleUp));
 				mInterpolators[0].d_interpolationCount = 0;
-				mInterpolators[1].addPoint(fromOcv(mBlobs[1].center)*mScaleUp);
+				mInterpolators[1].addPoint(adjustScale(fromOcv(mBlobs[1].center)*mScaleUp));
 				mInterpolators[1].d_interpolationCount = 0;
 			}
 			else
 			{
-				mInterpolators[0].addPoint(fromOcv(mBlobs[1].center)*mScaleUp);
+				mInterpolators[0].addPoint(adjustScale(fromOcv(mBlobs[1].center)*mScaleUp));
 				mInterpolators[0].d_interpolationCount = 0;
-				mInterpolators[1].addPoint(fromOcv(mBlobs[0].center)*mScaleUp);
+				mInterpolators[1].addPoint(adjustScale(fromOcv(mBlobs[0].center)*mScaleUp));
 				mInterpolators[1].d_interpolationCount = 0;
 			}
 		}
 		else if (mBlobs.size() == 1)
 		{
 			if (mInterpolators[0].d_interpolationCount == 0
-				|| mInterpolators[0].getDist(fromOcv(mBlobs[0].center)*mScaleUp) < mInterpolators[1].getDist(fromOcv(mBlobs[0].center)*mScaleUp))
+				|| mInterpolators[0].getDist(adjustScale(fromOcv(mBlobs[0].center)*mScaleUp)) < mInterpolators[1].getDist(adjustScale(fromOcv(mBlobs[0].center)*mScaleUp)))
 			{
-				mInterpolators[0].addPoint(fromOcv(mBlobs[0].center)*mScaleUp);
+				mInterpolators[0].addPoint(adjustScale(fromOcv(mBlobs[0].center)*mScaleUp));
 				mInterpolators[0].d_interpolationCount = 0;
 				mInterpolators[1].getNextPoint();
 			}
 			else
 			{
 				mInterpolators[0].getNextPoint();
-				mInterpolators[1].addPoint(fromOcv(mBlobs[0].center)*mScaleUp);
+				mInterpolators[1].addPoint(adjustScale(fromOcv(mBlobs[0].center)*mScaleUp));
 				mInterpolators[1].d_interpolationCount = 0;
 			}
 		}
@@ -151,13 +158,15 @@ void Tracker::update()
 void Tracker::draw()
 {
 	if (mCaptureTex) {
+		gl::pushMatrices();
+		gl::translate(mOffset);
 		gl::draw(mCaptureTex);
 
 		gl::color(Color::white());
 
 		for (int i = 0; i < mBlobs.size(); i++)
 		{
-			Vec2f center = fromOcv(mBlobs[i].center)*mScaleUp;
+			Vec2f center = adjustScale(fromOcv(mBlobs[i].center)*mScaleUp);
 			glBegin(GL_POINTS);
 			glVertex2f(center);
 			glEnd();
@@ -165,8 +174,17 @@ void Tracker::draw()
 			gl::drawStrokedCircle(center, mBlobs[i].radius);
 		}
 
-		mInterpolators.begin()->second.draw();
+		//mInterpolators.begin()->second.draw();
 		for (std::map<int, Interpolator>::iterator itor = mInterpolators.begin(); itor != mInterpolators.end(); itor++ )
 			itor->second.draw();
+
+		gl::popMatrices();
+		
+		//draw a circle at the center to show offset
+		gl::color(1.f, 0, 0);
+		glBegin(GL_POINTS);
+		glVertex2f(mOffset + getWindowCenter());
+		glEnd();
+		gl::drawStrokedCircle(mOffset + getWindowCenter(), 5.f);
 	}
 }

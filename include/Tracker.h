@@ -34,19 +34,22 @@ public:
 	void setup();
 	void update();
 	void draw();
-	void mouseDown(Vec2i &mousePos);
+	void mouseDown(Vec2f &mousePos);
 	int numBlobs();
 	Vec2f getBlobCenter(const int num);
+	Vec2f adjustScale(Vec2f initialPoint);
 
 	Surface8u   mImage;
 	Capture     mCapture;
 	gl::Texture mCaptureTex;
 	vector<myBlob> mBlobs;
 	int mMaxCenters;
-	float mScaleDown, mScaleUp;
+	float mScaleDown;
+	Vec2f mScaleUp, mScaleUpAdjust;
 	cv::SimpleBlobDetector *mBlobDetector;
 	std::map<int, Interpolator> mInterpolators;
 
 	const int WEBCAM_MAX_WIDTH = 1280, WEBCAM_MAX_HEIGHT = 720;
 	int maxBlobs = 2;
+	Vec2i mOffset;
 };

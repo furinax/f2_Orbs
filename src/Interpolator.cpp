@@ -70,6 +70,13 @@ bool Interpolator::getNextPoint()
 	return true;
 }
 
+Vec2f Interpolator::getFrontPoint()
+{
+	if (d_interpolationCount > MAX_INTERPOLATIONS || d_points.empty() )
+		return Vec2f::zero();
+	return d_points.front();
+}
+
 void Interpolator::draw()
 {
 	typedef list<Vec2f>::iterator points_iter_t;
