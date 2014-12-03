@@ -2,7 +2,6 @@
 
 using namespace ci;
 using namespace ci::app;
-using namespace std;
 
 Listener::Listener()
 {
@@ -19,7 +18,7 @@ Listener::~Listener()
 void Listener::setup()
 {
 	auto ctx = audio::Context::master();
-
+	
 	// The InputDeviceNode is platform-specific, so you create it using a special method on the Context:
 	mInputDeviceNode = ctx->createInputDeviceNode();
 
@@ -41,12 +40,43 @@ void Listener::update()
 {
 	mMagSpectrum = mMonitorSpectralNode->getMagSpectrum();
 
-	size_t bin = 15;
-	float freq = mMonitorSpectralNode->getFreqForBin(bin);
-	float mag = audio::linearToDecibel(mMagSpectrum[bin]);
+//	size_t bin = 15;
+//	float freq = mMonitorSpectralNode->getFreqForBin(bin);
+//	float mag = audio::linearToDecibel(mMagSpectrum[bin]);
 }
 
 float Listener::getVolume() const
 {
-	return mMonitorSpectralNode->getVolume();
+	return mScale * mMonitorSpectralNode->getVolume();
+}
+
+float Listener::getBinVolume(const int bin) const
+{
+
+	return audio::linearToDecibel(mMagSpectrum[bin]);
+}
+
+int Listener::getBinForFrequency(const int freq) const
+//binary search to find the frequency
+{
+
+	int lowerBound = 0, upperBound = mMonitorSpectralNode->getFftSize();
+	while (lowerBound < upperBound)
+	{
+		float pivot = (upperBound - lowerBound) / 2 + lowerBound;
+		float check= mMonitorSpectralNode->getFreqForBin(pivot);
+		if (check < freq)
+		{
+			lowerBound = pivot + 1;
+		}
+		else if (check > freq)
+		{
+			upperBound = pivot - 1;
+		}
+		else if (check == freq)
+			return pivot;
+	}
+	if (upperBound < 0)
+		return 0;
+	return upperBound;
 }

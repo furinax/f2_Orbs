@@ -1,37 +1,31 @@
 #include "ParticleB.h"
+#include <iterator>
 
 using namespace ci;
-using namespace std;
+using namespace ci::app;
 
-//white charge that goes towards the cursor
+ParticleB::ParticleB(const Vec2f& position, const Listener &list){
+	mAnchorPosition = getWindowCenter();
 
-ParticleB::ParticleB(const Vec2f& position, const float radius, const Listener &list){
-	Vec2f offset = ci::app::getWindowWidth()*randVec2f();
-	this->position = position + offset;
-	this->anchorPosition = position;
-	this->mRadiusAnchor = 3.f;
-	this->mRadius = .5f;
-	this->mVel = -.20 * offset;
-	prevPosition = position;
-	mColor = Color(1.f, 0.f, 0.f);
+	mRadius = 100.f*list.getVolume();
+	mRadiusAnchor = 3.f;
+
+	mFillGaps = true;
+	mColor = Color(randInt(2),randInt(2),randInt(2));
 	mOverlayColor = Color::white();
-	mDrag = .9f;
+	mDrag = 1.5f;
+	mLifespan = 5;
 }
 
 void ParticleB::update(const Listener& list, const ci::Vec2f pos){
 
-	mAge+=2;
+	mAge++;
 	if (mAge > mLifespan)
 		mIsDead = true;
-	if ((position - anchorPosition).length() < 50.f)
-		mDrag = .5f;
+
 	float ageMap = 1.0f - (mAge / (float)mLifespan);
-	mRadius = ci::lerp(.5f, mRadiusAnchor, 1.0f - ageMap);
-	Vec2f temp = position;
-	mVel += mAcc;
-	mVel *= mDrag;
-	position += mVel;
-	prevPosition = temp;
+	mRadius *= mDrag;
+
 }
 
 void ParticleB::draw(const bool overlay, const Listener& list, const ci::Vec2f pos){
@@ -41,19 +35,7 @@ void ParticleB::draw(const bool overlay, const Listener& list, const ci::Vec2f p
 	{
 		gl::color(mOverlayColor);
 	}
+	gl::lineWidth(mRadiusAnchor);
+	gl::drawStrokedCircle(getWindowCenter(), mRadius);
 
-	if (mVel.length() > VEL_THRESHOLD)
-	{
-		gl::lineWidth(mRadius * 2);
-		gl::begin(GL_LINES);
-		gl::vertex(prevPosition);
-		gl::vertex(position);
-		gl::end();
-		gl::drawSolidCircle(position, mRadius);
-		gl::drawSolidCircle(prevPosition, mRadius);
-	}
-	else
-	{
-		gl::drawSolidCircle(position, mRadius);
-	}
 }

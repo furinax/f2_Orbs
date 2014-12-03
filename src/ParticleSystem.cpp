@@ -2,7 +2,6 @@
 
 using namespace ci;
 using namespace ci::app;
-using namespace std;
 
 ParticleSystem::ParticleSystem()
 {
@@ -53,6 +52,7 @@ void ParticleSystem::draw(const Listener& list, const ci::Vec2f pos){
 	gl::drawSolidRect(rect);
 
 	gl::disableAlphaBlending();
+	gl::color(Color::white());
 
     for( std::vector<Particle*>::iterator it = mParticles.begin(); it != mParticles.end(); ++it ){
         (*it)->draw(false, list, pos);
@@ -93,10 +93,12 @@ void ParticleSystem::draw(const Listener& list, const ci::Vec2f pos){
 	blurShader.unbind();
 
 	gl::enableAdditiveBlending();
-	gl::draw(mFboBlurred.getTexture(), getWindowBounds());
-	gl::draw(mFboBlurred.getTexture(), getWindowBounds());
-	gl::draw(mFboBlurred.getTexture(), getWindowBounds());
-	
+	for (int i = 0; i < mUnderlays; i++)
+	{
+		gl::color(Color::white());
+		gl::draw(mFboBlurred.getTexture(), getWindowBounds());
+	}
+
 	for (std::vector<Particle*>::iterator it = mParticles.begin(); it != mParticles.end(); ++it){
 		(*it)->draw( true , list, pos);
 	}

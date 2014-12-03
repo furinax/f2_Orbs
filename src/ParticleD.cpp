@@ -1,30 +1,28 @@
-#include "ParticleA.h"
+#include "ParticleD.h"
 #include <iterator>
 
 using namespace ci;
 using namespace ci::app;
 
-ParticleA::ParticleA(const Vec2f& position, const Listener& list){
-	addPosition( position );
-	addPosition( position );
+ParticleD::ParticleD(const Vec2f& position, const Listener& list){
+	addPosition(Vec2f::zero());
+	addPosition(Vec2f::zero());
 	mAnchorPosition = position;
-	
-	mRadius = ci::constrain(list.getVolume() * 5.f, mMinRadius, mMaxRadius);
+
+	mRadius = 5.f;
 	mRadiusAnchor = mRadius;
 
-	
-	mColor = Color::white();
 	mOverlayColor = Color::white();
-	mDrag = 1.0f;
-	mFillGaps = true;
+	mDrag = .8f;
 
-	mVel = randFloat(20.f, 40.f)*(Vec2f(sin(getElapsedFrames() / 4.f), cos(getElapsedFrames() / 4.f)));
-	float x = constrain(2.f* list.getVolume(), 0.f, 1.f);
-	mColor = ColorA(randFloat(), x / 2.f, 1.f - x, 1.f);
+	mFillGaps = false;
+	mVelThreshold = 5.f;
+	mVel = randVec2f() * 40.f;
+	mColor = ColorA(1.f, .5f, 0.f, 1.f);
 
 }
 
-void ParticleA::update(const Listener& list, const ci::Vec2f pos){
+void ParticleD::update(const Listener& list, const ci::Vec2f pos){
 
 	mAge++;
 	if (mAge > mLifespan)
@@ -34,14 +32,18 @@ void ParticleA::update(const Listener& list, const ci::Vec2f pos){
 	mRadius = mRadiusAnchor * ageMap;
 	//mColor = ColorA(1.f, ageMap / 2.f, (1.0f - ageMap), ageMap);
 
+
 	Vec2f newPos = Vec2f(mPositions.front());
 	mVel += mAcc;
+	float noise = mPerlin.fBm(Vec3f(newPos * 0.005f, app::getElapsedSeconds() * 0.1f));
+	float angle = noise * 15.0f;
+	mVel += Vec2f(cos(angle), sin(angle)) * 20.f * (1.0f - ageMap);
 	mVel *= mDrag;
-	newPos += mOrientation*mVel;
+	newPos += mVel;
 	addPosition(newPos);
 }
 
-void ParticleA::draw(const bool overlay, const Listener& list, const ci::Vec2f pos){
+void ParticleD::draw(const bool overlay, const Listener& list, const ci::Vec2f pos){
 	if (!overlay)
 		gl::color(mColor);
 	else
@@ -49,6 +51,9 @@ void ParticleA::draw(const bool overlay, const Listener& list, const ci::Vec2f p
 		ColorA w(Color::white(), mColor.a);
 		gl::color(w);
 	}
+
+	gl::pushMatrices();
+	gl::translate(mAnchorPosition);
 
 	if (mFillGaps && mVel.length() > mVelThreshold)
 	{
@@ -64,4 +69,6 @@ void ParticleA::draw(const bool overlay, const Listener& list, const ci::Vec2f p
 	{
 		gl::drawSolidCircle(mPositions.front(), mRadius);
 	}
+
+	gl::popMatrices();
 }

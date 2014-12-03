@@ -15,7 +15,6 @@
 
 using namespace ci;
 using namespace ci::app;
-using namespace std;
 
 struct myBlob {
 	cv::Point2f center;
@@ -42,7 +41,7 @@ public:
 	Surface8u   mImage;
 	Capture     mCapture;
 	gl::Texture mCaptureTex;
-	vector<myBlob> mBlobs;
+	std::vector<myBlob> mBlobs;
 	int mMaxCenters;
 	float mScaleDown;
 	Vec2f mScaleUp, mScaleUpAdjust;

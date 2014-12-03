@@ -2,27 +2,87 @@
 
 using namespace ci;
 using namespace ci::app;
-using namespace std;
 
-namespace
+void ParticleFactory::create(const int elapsedSeconds, const Vec2f origin, const Listener& list, ParticleSystem & ps)
 {
-	float MAX_PARTICLE_RADIUS = 5.f, MIN_PARTICLE_RADIUS = 2.f;
-}
-void ParticleFactory::create(const int elapsedSeconds, const Vec2f center, const Listener& list, ParticleSystem & ps)
-{
-	if (elapsedSeconds<10)
+	ps.mUnderlays = 3;
+	switch (d_particleToCreate)
 	{
-		Particle* particle = new ParticleC(center, ci::constrain(MAX_PARTICLE_RADIUS * list.getVolume() * 5.f, MIN_PARTICLE_RADIUS, MAX_PARTICLE_RADIUS), list);
+	
+	case PARTICLE_A:{
+		for (int i = 0; i < 3; ++i)
+		{
+			Particle* particle = new ParticleA(origin, list);
+			particle->mOrientation = ps.mOrientation;
+			ps.addParticle(particle);
+		}
+	}break;
+	case PARTICLE_B:{
+		Particle* particle = new ParticleB(origin, list);
+			ps.addParticle(particle);
+	}break;
+	case PARTICLE_C:{
+		Particle* particle = new ParticleC(origin, list);
+			ps.addParticle(particle);
+	}break;
+	case PARTICLE_D:{
+		for (int i = 0; i < (int)(list.getVolume()*20.f); ++i)
+		{
+			Particle* particle = new ParticleD(origin, list);
+			ps.addParticle(particle);
+		}
+	}break;
+	case PARTICLE_E:{
+			Particle* particle = new ParticleE(origin, list);
+			particle->mOrientation = ps.mOrientation;
+			ps.addParticle(particle);
+	}break;
+	case PARTICLE_F:{
+		for (int i = 0; i < 4; ++i)
+		{
+			Particle* particle = new ParticleF(origin, list);
+			particle->mOrientation = ps.mOrientation;
+			ps.addParticle(particle);
+		}
+	}break;
+	case PARTICLE_G:{
+			while (ps.mParticles.size() < 3)
+			{
+				Particle* particle = new ParticleG(origin, list);
+				ps.addParticle(particle);
+			}
+	}break;
+	case PARTICLE_H:{
+		for (int i = 0; i < 4; ++i)
+		{
+			Particle* particle = new ParticleH(origin, list);
+			ps.addParticle(particle);
+		}
+	}break;
+	case PARTICLE_I:{
+			Particle* particle = new ParticleI(origin, list);
+			ps.addParticle(particle);
+	}break;
+	case PARTICLE_J:{
+		Particle* particle = new ParticleJ(origin, list);
 		ps.addParticle(particle);
-	}
-	else if (elapsedSeconds < 15)
-	{
-		Particle* particle = new ParticleB(center, ci::constrain(MAX_PARTICLE_RADIUS * list.getVolume() * 5.f, MIN_PARTICLE_RADIUS, MAX_PARTICLE_RADIUS), list);
+	}break;
+	case PARTICLE_K:{
+		Particle* particle = new ParticleK(origin, list);
 		ps.addParticle(particle);
-	}
-	else
-	{
-		Particle* particle = new ParticleA(center, ci::constrain(MAX_PARTICLE_RADIUS * list.getVolume() * 5.f, MIN_PARTICLE_RADIUS, MAX_PARTICLE_RADIUS), list);
+	}break;
+	case PARTICLE_L:{
+		Particle* particle = new ParticleL(origin, list);
 		ps.addParticle(particle);
+	}break;
+	case PARTICLE_M:{
+		Particle* particle = new ParticleM(origin, list);
+		particle->mOrientation = ps.mOrientation;
+		ps.addParticle(particle);
+		ps.mUnderlays = 1;
+	}break;
+	default:
+		ci::app::console() << "UNKNOWN PARTICLE: " << d_particleToCreate;
+		break;
 	}
 }

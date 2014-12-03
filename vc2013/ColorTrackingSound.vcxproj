@@ -108,23 +108,46 @@
     <ResourceCompile Include="Resources.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\CatmullRom.cpp" />
     <ClCompile Include="..\src\ColorTrackingSoundApp.cpp" />
     <ClCompile Include="..\src\Listener.cpp" />
     <ClCompile Include="..\src\ParticleA.cpp" />
     <ClCompile Include="..\src\ParticleB.cpp" />
     <ClCompile Include="..\src\ParticleC.cpp" />
+    <ClCompile Include="..\src\ParticleD.cpp" />
+    <ClCompile Include="..\src\ParticleE.cpp" />
+    <ClCompile Include="..\src\ParticleF.cpp" />
     <ClCompile Include="..\src\ParticleFactory.cpp" />
+    <ClCompile Include="..\src\ParticleG.cpp" />
+    <ClCompile Include="..\src\ParticleH.cpp" />
+    <ClCompile Include="..\src\ParticleI.cpp" />
+    <ClCompile Include="..\src\ParticleJ.cpp" />
+    <ClCompile Include="..\src\ParticleK.cpp" />
+    <ClCompile Include="..\src\ParticleL.cpp" />
+    <ClCompile Include="..\src\ParticleM.cpp" />
     <ClCompile Include="..\src\ParticleSystem.cpp" />
     <ClCompile Include="..\src\Tracker.cpp" />
+    <ClCompile Include="Particle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\CatmullRom.h" />
     <ClInclude Include="..\include\Interpolator.h" />
     <ClInclude Include="..\include\Listener.h" />
     <ClInclude Include="..\include\Particle.h" />
     <ClInclude Include="..\include\ParticleA.h" />
     <ClInclude Include="..\include\ParticleB.h" />
     <ClInclude Include="..\include\ParticleC.h" />
+    <ClInclude Include="..\include\ParticleD.h" />
+    <ClInclude Include="..\include\ParticleE.h" />
+    <ClInclude Include="..\include\ParticleF.h" />
     <ClInclude Include="..\include\ParticleFactory.h" />
+    <ClInclude Include="..\include\ParticleG.h" />
+    <ClInclude Include="..\include\ParticleH.h" />
+    <ClInclude Include="..\include\ParticleI.h" />
+    <ClInclude Include="..\include\ParticleJ.h" />
+    <ClInclude Include="..\include\ParticleK.h" />
+    <ClInclude Include="..\include\ParticleL.h" />
+    <ClInclude Include="..\include\ParticleM.h" />
     <ClInclude Include="..\include\ParticleSystem.h" />
     <ClInclude Include="..\include\Resources.h" />
     <ClInclude Include="..\include\Tracker.h" />

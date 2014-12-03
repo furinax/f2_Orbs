@@ -7,7 +7,7 @@
 class ParticleA : public Particle{
 public:
 
-	ParticleA(const ci::Vec2f& position, const float radius, const Listener& list);
+	ParticleA(const ci::Vec2f& position, const Listener& list);
 	void update(const Listener& list, const ci::Vec2f pos);
 	void draw(const bool overlay, const Listener& list, const ci::Vec2f pos);
 };

@@ -91,7 +91,7 @@ void Tracker::update()
 		cv::cvtColor(inputMat, inputMat, CV_BGR2GRAY);
 		cv::resize(inputMat, inputMat, cv::Size(((float)getWindowWidth()) / mScaleDown, ((float)getWindowHeight()) / mScaleDown));
 		
-		vector< cv::KeyPoint >  keyPoints;
+		std::vector< cv::KeyPoint >  keyPoints;
 		mBlobDetector->detect(inputMat, keyPoints);
 
 		mBlobs.clear();
@@ -151,7 +151,7 @@ void Tracker::update()
 	}
 	else
 	{
-		console() << "WARNING: skipped a frame: " << getElapsedFrames() << endl;
+		console() << "WARNING: skipped a frame: " << getElapsedFrames() << std::endl;
 	}
 }
 
