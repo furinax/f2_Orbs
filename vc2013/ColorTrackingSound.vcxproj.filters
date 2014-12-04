@@ -90,6 +90,9 @@
     <ClCompile Include="..\src\ParticleM.cpp">
       <Filter>Source Files\Particles</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ParticleN.cpp">
+      <Filter>Source Files\Particles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -153,6 +156,9 @@
       <Filter>Header Files\Particles</Filter>
     </ClInclude>
     <ClInclude Include="..\include\ParticleM.h">
+      <Filter>Header Files\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ParticleN.h">
       <Filter>Header Files\Particles</Filter>
     </ClInclude>
   </ItemGroup>

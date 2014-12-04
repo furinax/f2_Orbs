@@ -125,6 +125,7 @@
     <ClCompile Include="..\src\ParticleK.cpp" />
     <ClCompile Include="..\src\ParticleL.cpp" />
     <ClCompile Include="..\src\ParticleM.cpp" />
+    <ClCompile Include="..\src\ParticleN.cpp" />
     <ClCompile Include="..\src\ParticleSystem.cpp" />
     <ClCompile Include="..\src\Tracker.cpp" />
     <ClCompile Include="Particle.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="..\include\ParticleK.h" />
     <ClInclude Include="..\include\ParticleL.h" />
     <ClInclude Include="..\include\ParticleM.h" />
+    <ClInclude Include="..\include\ParticleN.h" />
     <ClInclude Include="..\include\ParticleSystem.h" />
     <ClInclude Include="..\include\Resources.h" />
     <ClInclude Include="..\include\Tracker.h" />

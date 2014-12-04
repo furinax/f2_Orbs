@@ -16,7 +16,7 @@ ParticleG::ParticleG(const Vec2f& position, const Listener& list){
 
 	mOverlayColor = Color::white();
 	mDrag = 1.f;
-	mLifespan = 500;
+	mLifespan = 400;
 
 	mFillGaps = false;
 	mVelThreshold = 5.f;

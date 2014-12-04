@@ -14,7 +14,7 @@
 #include "ParticleK.h"
 #include "ParticleL.h"
 #include "ParticleM.h"
-
+#include "ParticleN.h"
 
 #include "Listener.h"
 #include "ParticleSystem.h"
@@ -24,7 +24,7 @@
 enum particle_choice
 {
 	PARTICLE_A, // spirals out, neon lights
-	PARTICLE_B, // zooms into the anchor point
+	PARTICLE_B, // circles which go outwards
 	PARTICLE_C, // blue splashes that are circular
 	PARTICLE_D, // same as c but individual with perlin noise
 	PARTICLE_E, // four spokes coming out, following the first point
@@ -33,14 +33,18 @@ enum particle_choice
 	PARTICLE_H,  //sparks
 	PARTICLE_I,   //circles
 	PARTICLE_J,   //fixed boxes
-	PARTICLE_K,   //three legged creatures
-	PARTICLE_L,   //spinning particles
+	PARTICLE_K,   //CMYK blob
+	PARTICLE_L,   //mimics a hurricane
 	PARTICLE_M,   //branches that curl
+	PARTICLE_N,   //sparkler rays
 };
 
 class ParticleFactory
 {
 public:
+	//create: for testing
 	void create(const int elapsedSeconds, const ci::Vec2f center, const Listener& list, ParticleSystem & ps);
-	int d_particleToCreate=10;
+	//perform: for synchronization to a track
+	void perform(const int elapsedSeconds, const ci::Vec2f center, const Listener& list, ParticleSystem & ps);
+	int d_particleToCreate=7;
 };

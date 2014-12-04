@@ -20,5 +20,5 @@ public:
 	ci::audio::InputDeviceNodeRef		mInputDeviceNode;
 	ci::audio::MonitorSpectralNodeRef	mMonitorSpectralNode;
 	std::vector<float>					mMagSpectrum;
-	float mScale=5.f;
+	float mScale=3.f;
 };

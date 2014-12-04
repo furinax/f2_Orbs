@@ -22,7 +22,7 @@ ParticleH::ParticleH(const Vec2f& position, const Listener& list){
 	Vec2f expander = position - getWindowCenter();
 	expander.safeNormalize();
 	mVel = 5 * randVec2f() + 30*expander;
-	mAcc = -Vec2f(0.f, -10.f);
+	mAcc = -Vec2f(0.f, -6.f);
 
 	mColor = ColorA(1.f, .7f, 0.f, 1.f);
 

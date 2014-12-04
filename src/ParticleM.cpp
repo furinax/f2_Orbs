@@ -31,7 +31,7 @@ void ParticleM::update(const Listener& list, const ci::Vec2f pos){
 	if (mAge > mLifespan)
 		mIsDead = true;
 	float ageMap = 1.0f - (mAge / (float)mLifespan);
-	mRadius = mRadiusAnchor *= ageMap;
+	mRadius = mRadiusAnchor * ageMap;
 
 	if (mIsCurl && ageMap < .7f)
 	{
@@ -61,5 +61,5 @@ void ParticleM::draw(const bool overlay, const Listener& list, const ci::Vec2f p
 		inputColor = mColor;
 	}
 
-	CatmullRom::draw(mPositions, mRadius, .9f, inputColor);
+	CatmullRom::draw(mPositions, mRadius, 1.f, inputColor);
 }

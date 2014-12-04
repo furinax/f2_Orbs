@@ -18,7 +18,7 @@ ParticleI::ParticleI(const Vec2f& position, const Listener& list){
 	mFillGaps = false;
 	mVelThreshold = 5.f;
 	mVel = randVec2f() * 40.f;
-	mColor = ColorA(1.f, .5f, 0.f, 1.f);
+	mColor = ColorA(1.f, .4f, 0.6f, 1.f);
 
 }
 

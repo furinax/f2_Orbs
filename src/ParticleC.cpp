@@ -16,7 +16,7 @@ ParticleC::ParticleC(const Vec2f& position, const Listener& list){
 	mOverlayColor = Color::white();
 
 	mDrag = .7f;
-	mVel = Vec2f(40.f, 0)*(1.f+list.getVolume()*2.f);
+	mVel = Vec2f(20.f, 0)*(1.f+list.getVolume()*2.f);
 	
 
 }

@@ -47,7 +47,7 @@ void Listener::update()
 
 float Listener::getVolume() const
 {
-	return mScale * mMonitorSpectralNode->getVolume();
+	return ci::constrain( mScale * mMonitorSpectralNode->getVolume(), 0.f, 1.f );
 }
 
 float Listener::getBinVolume(const int bin) const

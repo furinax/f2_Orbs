@@ -50,7 +50,8 @@ public:
 void ColorTrackingSoundApp::setup()
 {
 	gl::color(Color::black());
-	setWindowSize(1280, 720);
+	setWindowSize(1920, 1080);
+	//setWindowSize(1280, 720);
 	setFrameRate(30.f);
 	mMousePosition = getWindowCenter();
 	mPrevPosition = getWindowCenter();
@@ -65,7 +66,7 @@ void ColorTrackingSoundApp::setup()
 
 	// Setup the parameters
 	mParams = params::InterfaceGl("Parameters", Vec2i(200, 150));
-	mParams.addParam("Particle ID", &pf.d_particleToCreate, "min=0 max=12 keyIncr=+ keyDecr=-");
+	mParams.addParam("Particle ID", &pf.d_particleToCreate, "min=0 max=13 keyIncr=+ keyDecr=-");
 	mParams.addParam("CenterX", &t.mOffset.x, "min=-200 max=200 step=5 keyIncr=f keyDecr=s");
 	mParams.addParam("CenterY", &t.mOffset.y, "min=-200 max=200 step=5 keyIncr=a keyDecr=e");
 	mParams.addParam("mScaleUpX", &t.mScaleUpAdjust.x, "min=0.00 max=2.00 step=0.05 keyIncr=r keyDecr=w");

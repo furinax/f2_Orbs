@@ -3,7 +3,7 @@
 Tracker::Tracker()
 {
 	mOffset = Vec2f::zero();
-	mScaleUpAdjust = Vec2f(1.f, 1.f);
+	mScaleUpAdjust = Vec2f(1.1f, 1.1f);
 }
 
 Tracker::~Tracker()

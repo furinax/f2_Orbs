@@ -9,7 +9,7 @@ using namespace ci::app;
 
 ParticleL::ParticleL(const Vec2f& position, const Listener& list){
 	mMaxPositions = 10;
-	mLifespan = 20;
+	mLifespan = 40;
 
 	mRadius = 1.f;
 	mRadiusAnchor = mRadius;

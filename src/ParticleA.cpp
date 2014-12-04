@@ -11,7 +11,6 @@ ParticleA::ParticleA(const Vec2f& position, const Listener& list){
 	
 	mRadius = ci::constrain(list.getVolume() * 5.f, mMinRadius, mMaxRadius);
 	mRadiusAnchor = mRadius;
-
 	
 	mColor = Color::white();
 	mOverlayColor = Color::white();
@@ -19,8 +18,8 @@ ParticleA::ParticleA(const Vec2f& position, const Listener& list){
 	mFillGaps = true;
 
 	mVel = randFloat(20.f, 40.f)*(Vec2f(sin(getElapsedFrames() / 4.f), cos(getElapsedFrames() / 4.f)));
-	float x = constrain(2.f* list.getVolume(), 0.f, 1.f);
-	mColor = ColorA(randFloat(), x / 2.f, 1.f - x, 1.f);
+	float x = list.getVolume();
+	mColor = ColorA(1.f, x / 2.f, 1.f - x, 1.f);
 
 }
 

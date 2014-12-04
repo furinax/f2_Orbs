@@ -10,8 +10,9 @@ ParticleB::ParticleB(const Vec2f& position, const Listener &list){
 	mRadius = 100.f*list.getVolume();
 	mRadiusAnchor = 3.f;
 
+	float listSquared = list.getVolume() * list.getVolume();
 	mFillGaps = true;
-	mColor = Color(randInt(2),randInt(2),randInt(2));
+	mColor = Color(listSquared, .4f*listSquared, 1.f - listSquared);
 	mOverlayColor = Color::white();
 	mDrag = 1.5f;
 	mLifespan = 5;

@@ -18,7 +18,7 @@ ParticleF::ParticleF(const Vec2f& position, const Listener& list){
 
 	mFillGaps = false;
 	mVelThreshold = 5.f;
-	mVel = list.getVolume() * 150.f * randVec2f();
+	mVel = list.getVolume() * 75.f * randVec2f();
 	mAcc.x = 2.f;
 
 	mColor = ColorA(.1f, 0.f, 1.f, 1.f);
