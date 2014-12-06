@@ -9,7 +9,7 @@ ParticleK::ParticleK(const Vec2f& position, const Listener& list){
 	mMaxPositions = 3;
 	mLifespan = 10;
 
-	mRadius = 40.f * list.getVolume();
+	mRadius = 80.f * list.getVolume();
 	mRadiusAnchor = .3f * mRadius;
 
 	Vec2f base = Vec2f::one();// randVec2f();

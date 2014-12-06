@@ -19,6 +19,9 @@
     <Filter Include="Header Files\Particles">
       <UniqueIdentifier>{5cd4a7f3-cbc4-4954-b202-0502c265ed52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="assets">
+      <UniqueIdentifier>{27e27834-a123-411c-ac91-6b3677e81dc4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ColorTrackingSoundApp.cpp">
@@ -93,6 +96,9 @@
     <ClCompile Include="..\src\ParticleN.cpp">
       <Filter>Source Files\Particles</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\MusicPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -161,6 +167,9 @@
     <ClInclude Include="..\include\ParticleN.h">
       <Filter>Header Files\Particles</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\MusicPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources.rc">
@@ -174,5 +183,10 @@
     <None Include="..\assets\blur_vert.glsl">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\assets\sapphire.mp3">
+      <Filter>assets</Filter>
+    </Media>
   </ItemGroup>
 </Project>

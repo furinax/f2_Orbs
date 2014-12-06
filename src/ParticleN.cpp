@@ -15,11 +15,14 @@ ParticleN::ParticleN(const Vec2f& position, const Listener& list){
 
 	mAnchorPosition = Vec2f::zero();
 	Vec2f expander = position - getWindowCenter();
+	Vec2f limiter = position - getWindowCenter();
 	expander.safeNormalize();
-	expander *= 600;
+	limiter.safeNormalize();
+	expander *= mMaxRadius;
+	limiter *= mMinRadius;
 	for (float i = 0; i < mMaxPositions; ++i)
 	{
-		addPosition(ci::lerp(Vec2f::zero(), expander, i / mMaxPositions + .2f));
+		addPosition(ci::lerp(limiter, expander, i / (float) mMaxPositions));
 	}
 
 	mVel = 10.f * randVec2f();

@@ -12,6 +12,7 @@
 #include "cinder/Rand.h"
 #include "Tracker.h"
 #include "Listener.h"
+#include "MusicPlayer.h"
 #include "cinder/params/Params.h"
 
 #include "CinderOpenCV.h"
@@ -39,11 +40,13 @@ public:
 	ParticleFactory pf;
 	Tracker t;
 	Listener list;
+	MusicPlayer mMusicPlayer;
 	Vec2f mMousePosition, mPrevPosition;
 	params::InterfaceGl		mParams;
 	bool mParamsVisible = false;
-	bool mTrackerVisible = true;
+	bool mTrackerVisible = false;
 	bool mParticlesVisible = true;
+	
 	int mTotalParticles = 0;
 };
 
@@ -116,6 +119,9 @@ void ColorTrackingSoundApp::keyDown(KeyEvent event)
 
 void ColorTrackingSoundApp::update()
 {
+	if (getElapsedSeconds() > pf.d_offsetTime && !mMusicPlayer.mIsStarted )
+		mMusicPlayer.start();
+
 	int particleCount = 0;
 	t.update();
 	list.update();
@@ -123,7 +129,7 @@ void ColorTrackingSoundApp::update()
 	for (int i = 0;i < pss.size(); i++)
 	{
 		if (t.getBlobCenter(i) != Vec2f::zero() )
-			pf.create(getElapsedSeconds(), t.getBlobCenter(i), list, pss[i]);
+			pf.perform(getElapsedSeconds(), t.getBlobCenter(i), list, pss[i]);
 		pss[i].update(list, t.getBlobCenter(i));
 		particleCount += pss[i].mParticles.size();
 	}

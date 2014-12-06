@@ -1,9 +1,10 @@
 #include "ParticleFactory.h"
+#include "cinder/gl/gl.h"
 
 using namespace ci;
 using namespace ci::app;
 
-void ParticleFactory::create(const int elapsedSeconds, const Vec2f origin, const Listener& list, ParticleSystem & ps)
+void ParticleFactory::create(const double elapsedSeconds, const Vec2f origin, const Listener& list, ParticleSystem & ps)
 {
 	ps.mUnderlays = 3;
 	switch (d_particleToCreate)
@@ -91,10 +92,13 @@ void ParticleFactory::create(const int elapsedSeconds, const Vec2f origin, const
 	}
 }
 
-void ParticleFactory::perform(const int elapsedSeconds, const Vec2f origin, const Listener& list, ParticleSystem & ps)
+void ParticleFactory::perform(const double elapsedSeconds, const Vec2f origin, const Listener& list, ParticleSystem & ps)
 {
-	
-	if (elapsedSeconds >= 30 && elapsedSeconds < 45)
+	double offsetSeconds = elapsedSeconds + d_adjustSeconds - d_offsetTime;
+	if (offsetSeconds < 0)
+		ci::app::console() << "waiting for song to start..." << std::endl;
+
+	if (offsetSeconds >= 30 && offsetSeconds < 45)
 	{
 		while (ps.mParticles.size() < 3)
 		{
@@ -102,27 +106,27 @@ void ParticleFactory::perform(const int elapsedSeconds, const Vec2f origin, cons
 			ps.addParticle(particle);
 		}
 	}
-	if (elapsedSeconds >= 45 && elapsedSeconds < 75)
+	if (offsetSeconds >= 45 && offsetSeconds < 75)
 	{
 		Particle* particle = new ParticleC(origin, list);
 		ps.addParticle(particle);
 	}
-	if (elapsedSeconds >= 75 && elapsedSeconds < 105)
+	if (offsetSeconds >= 75 && offsetSeconds < 105)
 	{
 		Particle* particle = new ParticleB(origin, list);
 		ps.addParticle(particle);
 	}
-	if (elapsedSeconds >= 105 && elapsedSeconds < 135)
+	if (offsetSeconds >= 105 && offsetSeconds < 135)
 	{
-		Particle* particle = new ParticleN(origin, list);
+		Particle* particle = new ParticleL(origin, list);
 		ps.addParticle(particle);
 	}
-	if (elapsedSeconds >= 135 && elapsedSeconds < 150)
+	if (offsetSeconds >= 135 && offsetSeconds < 150)
 	{
 		Particle* particle = new ParticleI(origin, list);
 		ps.addParticle(particle);
 	}
-	if (elapsedSeconds >= 135 && elapsedSeconds < 165)
+	if (offsetSeconds >= 135 && offsetSeconds < 165)
 	{
 		for (int i = 0; i < (int)(list.getVolume()*10.f); ++i)
 		{
@@ -136,7 +140,7 @@ void ParticleFactory::perform(const int elapsedSeconds, const Vec2f origin, cons
 			ps.addParticle(particle);
 		}
 	}
-	if (elapsedSeconds >= 165 && elapsedSeconds < 195)
+	if (offsetSeconds >= 165 && offsetSeconds < 195)
 	{
 		for (int i = 0; i < 4; ++i)
 		{
@@ -144,7 +148,7 @@ void ParticleFactory::perform(const int elapsedSeconds, const Vec2f origin, cons
 			ps.addParticle(particle);
 		}
 	}
-	if (elapsedSeconds >= 195 && elapsedSeconds < 210)
+	if (offsetSeconds >= 195 && offsetSeconds < 210)
 	{
 		for (int i = 0; i < 4; ++i)
 		{
@@ -156,17 +160,17 @@ void ParticleFactory::perform(const int elapsedSeconds, const Vec2f origin, cons
 		particle->mOrientation = ps.mOrientation;
 		ps.addParticle(particle);
 	}
-	if (elapsedSeconds >= 210 && elapsedSeconds < 225)
+	if (offsetSeconds >= 210 && offsetSeconds < 225)
 	{
 		Particle* particle = new ParticleJ(origin, list);
 		ps.addParticle(particle);
 	}
-	if (elapsedSeconds >= 225 && elapsedSeconds < 255)
+	if (offsetSeconds >= 225 && offsetSeconds < 255)
 	{
-		Particle* particle = new ParticleL(origin, list);
+		Particle* particle = new ParticleN(origin, list);
 		ps.addParticle(particle);
 	}
-	if (elapsedSeconds >= 255 )
+	if (offsetSeconds >= 255 )
 	{
 		Particle* particle = new ParticleK(origin, list);
 		ps.addParticle(particle);

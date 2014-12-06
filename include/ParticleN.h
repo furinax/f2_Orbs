@@ -11,5 +11,5 @@ public:
 	void update(const Listener& list, const ci::Vec2f pos);
 	void draw(const bool overlay, const Listener& list, const ci::Vec2f pos);
 	float mLineWidth = 5.f;
-	float mMinRadius = 100, mMaxRadius = 1000;
+	float mMinRadius = 200, mMaxRadius = 1105;
 };

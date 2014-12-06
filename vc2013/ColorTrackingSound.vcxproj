@@ -111,6 +111,7 @@
     <ClCompile Include="..\src\CatmullRom.cpp" />
     <ClCompile Include="..\src\ColorTrackingSoundApp.cpp" />
     <ClCompile Include="..\src\Listener.cpp" />
+    <ClCompile Include="..\src\MusicPlayer.cpp" />
     <ClCompile Include="..\src\ParticleA.cpp" />
     <ClCompile Include="..\src\ParticleB.cpp" />
     <ClCompile Include="..\src\ParticleC.cpp" />
@@ -134,6 +135,7 @@
     <ClInclude Include="..\include\CatmullRom.h" />
     <ClInclude Include="..\include\Interpolator.h" />
     <ClInclude Include="..\include\Listener.h" />
+    <ClInclude Include="..\include\MusicPlayer.h" />
     <ClInclude Include="..\include\Particle.h" />
     <ClInclude Include="..\include\ParticleA.h" />
     <ClInclude Include="..\include\ParticleB.h" />
@@ -160,6 +162,9 @@
     <ClCompile Include="..\src\Interpolator.cpp">
       <FileType>CppCode</FileType>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\assets\sapphire.mp3" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

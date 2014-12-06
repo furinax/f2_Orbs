@@ -43,8 +43,10 @@ class ParticleFactory
 {
 public:
 	//create: for testing
-	void create(const int elapsedSeconds, const ci::Vec2f center, const Listener& list, ParticleSystem & ps);
+	void create(const double elapsedSeconds, const ci::Vec2f center, const Listener& list, ParticleSystem & ps);
 	//perform: for synchronization to a track
-	void perform(const int elapsedSeconds, const ci::Vec2f center, const Listener& list, ParticleSystem & ps);
-	int d_particleToCreate=7;
+	void perform(const double elapsedSeconds, const ci::Vec2f center, const Listener& list, ParticleSystem & ps);
+	int d_particleToCreate=10;
+	double d_offsetTime = 0;
+	double d_adjustSeconds = -2.f;
 };
